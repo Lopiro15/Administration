@@ -14,16 +14,17 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form @submit="villeStore">
                             <div class="form-group">
                                 <label for="name">Nom de la ville</label>
                                 <textarea name="name" required class="form-control" id="name" rows="4" v-model="nom_ville"></textarea>
                             </div>
-                        </form>
-                        <div class="d-flex justify-content-sm-end mt-3">
+                            <div class="d-flex justify-content-sm-end mt-3">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                <button type="button" @click="villeStore" data-bs-dismiss="modal" class="btn btn-primary ml-2">Ajouter</button>
+                                <button type="submit"  data-bs-dismiss="modal" class="btn btn-primary ml-2">Ajouter</button>
                             </div>
+                        </form>
+                        
                     </div>
                 </div>
             </div>

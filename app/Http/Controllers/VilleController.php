@@ -63,7 +63,8 @@ class VilleController extends Controller
      */
     public function edit($id)
     {
-        //
+        $ville = Ville::find($id);
+        return response()->json($ville);
     }
 
     /**
@@ -73,9 +74,14 @@ class VilleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id)
     {
-        //
+        $ville = Ville::find($id);
+        $ville->nom_ville = request('nom_ville');
+        $ville->save();
+        if($ville) {
+            return $this->refresh();
+        };
     }
 
     /**

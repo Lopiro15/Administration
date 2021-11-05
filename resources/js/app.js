@@ -8,6 +8,7 @@ window.Vue = require('vue');
 
 Vue.component('pagination', require('laravel-vue-pagination'));
 Vue.component('addville', require('./components/AddVilleComponent.vue').default);
+Vue.component('editville', require('./components/EditVilleComponent.vue').default);
 
 import Home from './components/DashboardComponent.vue';
 import Point from './components/PointComponent.vue';

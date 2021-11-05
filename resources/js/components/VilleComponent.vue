@@ -19,9 +19,14 @@
                                 <tr v-for="(ville, index) in villes.data" :key="ville.id">
                                     <th scope="row">{{ index + 1 + ((villes.current_page - 1) * 4) }}</th>
                                     <td>{{ ville.nom_ville }}</td>
-                                    <td>Otto</td>
+                                    <td><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#EditModal" @click="getVille(ville.id)">
+                                        Editer
+                                         </button>
+                                    </td>
                                 </tr>
+                                <editville v-bind:villeToEdit = "villetoedit" @ville-updated="refresh"></editville>
                             </tbody>
+                            
                         </table>
                     </div>
                     <div class="card-footer d-flex justify-content-sm-between">
@@ -36,12 +41,14 @@
 
 <script>
 import AddVilleComponent from './AddVilleComponent.vue';
+import EditVilleComponent from './EditVilleComponent.vue';
     export default {
-  components: { AddVilleComponent },
+  components: { AddVilleComponent, EditVilleComponent },
 
         data() {
             return {
                 villes: {},
+                villetoedit: ''
             }
         },
 
@@ -56,6 +63,11 @@ import AddVilleComponent from './AddVilleComponent.vue';
                 .then(response => {
                     this.villes = response.data;
                 });
+            },
+            getVille(id) {
+                axios.get('/ville/edit/' + id)
+                    .then(response => this.villetoedit = response.data)
+                    .catch(error => console.log(error));
             },
             refresh(villes){
                 this.villes = villes.data;
