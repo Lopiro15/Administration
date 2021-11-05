@@ -19,6 +19,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     
     <script src="{{ asset('js/popper.js') }}" ></script>
     <script src="{{ asset('js/bootstrap.js') }}" ></script>
@@ -38,24 +39,24 @@
                     <span class="tooltip">Search</span>
                 </li>
                 <li>
-                    <a href="#">
+                    <router-link to="/">
                         <i class='bx bx-grid-alt'></i>
                         <span class="links_name">Dashboard</span>
-                    </a>
+                    </router-link>
                     <span class="tooltip">Dashboard</span>
                 </li>
                 <li>
-                    <a href="#">
+                    <router-link to="/point">
                     <i class='bx bxs-truck'></i>
                         <span class="links_name">Point de livraison</span>
-                    </a>
+                    </router-link>
                     <span class="tooltip">Point de livraison</span>
                 </li>
                 <li>
-                    <a href="#">
+                    <router-link to="/ville">
                         <i class='bx bxs-city'></i>
                         <span class="links_name">Villes</span>
-                    </a>
+                    </router-link>
                     <span class="tooltip">Villes</span>
                 </li>
                 <li>

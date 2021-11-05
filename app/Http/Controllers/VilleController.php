@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Ville;
 
 class VilleController extends Controller
 {
@@ -13,7 +14,7 @@ class VilleController extends Controller
      */
     public function index()
     {
-        //
+        return $this->refresh();
     }
 
     /**
@@ -34,7 +35,13 @@ class VilleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $ville = Ville::create($request->all());
+
+        if($ville) {
+            return $this->refresh();
+        }else {
+            return response()->json();
+        }
     }
 
     /**
@@ -80,5 +87,12 @@ class VilleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function refresh()
+    {
+        # code...
+        $villes = Ville::orderBy('nom_ville')->paginate(4);
+        return response()->json($villes);
     }
 }
