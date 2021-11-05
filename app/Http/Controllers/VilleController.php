@@ -14,7 +14,12 @@ class VilleController extends Controller
      */
     public function index()
     {
-        return $this->refresh();
+        if (request('q') != null) {
+            $villes['data'] = Ville::where('nom_ville', 'like', '%' . request('q') . '%')->get();
+            return response()->json($villes);
+        } else {
+            return $this->refresh();
+        }
     }
 
     /**

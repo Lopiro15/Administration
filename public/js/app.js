@@ -2144,6 +2144,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2154,7 +2162,9 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       villes: {},
-      villetoedit: ''
+      villetoedit: '',
+      q: '',
+      tot: true
     };
   },
   created: function created() {
@@ -2184,11 +2194,30 @@ __webpack_require__.r(__webpack_exports__);
         return console.log(error);
       });
     },
+    searchVille: function searchVille() {
+      var _this4 = this;
+
+      if (this.q.length > 0) {
+        axios.get('/ville/' + this.q).then(function (response) {
+          return _this4.villes = response.data;
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+        this.tot = false;
+      } else {
+        axios.get('/ville').then(function (response) {
+          return _this4.villes = response.data;
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+        this.tot = true;
+      }
+    },
     refresh: function refresh(villes) {
       this.villes = villes.data;
     },
     deleteVille: function deleteVille(id) {
-      var _this4 = this;
+      var _this5 = this;
 
       Swal.fire({
         title: 'Etes vous sûre?',
@@ -2202,7 +2231,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.isConfirmed) {
           axios["delete"]('/ville/' + id).then(function (response) {
-            return _this4.villes = response.data;
+            return _this5.villes = response.data;
           })["catch"](function (error) {
             return console.log(error);
           });
@@ -38768,92 +38797,129 @@ var render = function () {
             _vm._v("Liste des villes"),
           ]),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "card-body" },
-            [
-              _c("addville", {
-                staticClass: "mb-3",
-                on: { "Ville-added": _vm.refresh },
-              }),
-              _vm._v(" "),
-              _c(
-                "table",
-                { staticClass: "table table-responsive-md table-striped" },
-                [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    [
-                      _vm._l(_vm.villes.data, function (ville, index) {
-                        return _c("tr", { key: ville.id }, [
-                          _c("th", { attrs: { scope: "row" } }, [
-                            _vm._v(
-                              _vm._s(
-                                index + 1 + (_vm.villes.current_page - 1) * 4
-                              )
-                            ),
-                          ]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(ville.nom_ville))]),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            { staticClass: "d-flex justify-content-sm-end" },
-                            [
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-warning mr-2",
-                                  attrs: {
-                                    type: "button",
-                                    "data-bs-toggle": "modal",
-                                    "data-bs-target": "#EditModal",
-                                  },
-                                  on: {
-                                    click: function ($event) {
-                                      return _vm.getVille(ville.id)
-                                    },
-                                  },
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                    Editer\n                                     "
-                                  ),
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "button",
-                                {
-                                  staticClass: "btn btn-danger",
-                                  attrs: { type: "button" },
-                                  on: {
-                                    click: function ($event) {
-                                      return _vm.deleteVille(ville.id)
-                                    },
-                                  },
-                                },
-                                [_vm._v("Supprimer")]
-                              ),
-                            ]
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "div",
+              { staticClass: "d-flex justify-content-between" },
+              [
+                _c("addville", {
+                  staticClass: "mb-3",
+                  on: { "Ville-added": _vm.refresh },
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-row" }, [
+                  _c("div", { staticClass: "col-row" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.q,
+                          expression: "q",
+                        },
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "text",
+                        placeholder: "Rechercher une ville...",
+                      },
+                      domProps: { value: _vm.q },
+                      on: {
+                        keyup: _vm.searchVille,
+                        input: function ($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.q = $event.target.value
+                        },
+                      },
+                    }),
+                  ]),
+                ]),
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "table",
+              {
+                staticClass:
+                  "table table-primary .table-hover table-responsive-md  ",
+              },
+              [
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  [
+                    _vm._l(_vm.villes.data, function (ville, index) {
+                      return _c("tr", { key: ville.id }, [
+                        _c("th", { attrs: { scope: "row" } }, [
+                          _vm._v(
+                            _vm._s(
+                              _vm.tot
+                                ? index + 1 + (_vm.villes.current_page - 1) * 4
+                                : index + 1
+                            )
                           ),
-                        ])
-                      }),
-                      _vm._v(" "),
-                      _c("editville", {
-                        attrs: { villeToEdit: _vm.villetoedit },
-                        on: { "ville-updated": _vm.refresh },
-                      }),
-                    ],
-                    2
-                  ),
-                ]
-              ),
-            ],
-            1
-          ),
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(ville.nom_ville))]),
+                        _vm._v(" "),
+                        _c(
+                          "td",
+                          { staticClass: "d-flex justify-content-sm-end" },
+                          [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-warning mr-2",
+                                attrs: {
+                                  type: "button",
+                                  "data-bs-toggle": "modal",
+                                  "data-bs-target": "#EditModal",
+                                },
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.getVille(ville.id)
+                                  },
+                                },
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                    Editer\n                                     "
+                                ),
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function ($event) {
+                                    return _vm.deleteVille(ville.id)
+                                  },
+                                },
+                              },
+                              [_vm._v("Supprimer")]
+                            ),
+                          ]
+                        ),
+                      ])
+                    }),
+                    _vm._v(" "),
+                    _c("editville", {
+                      attrs: { villeToEdit: _vm.villetoedit },
+                      on: { "ville-updated": _vm.refresh },
+                    }),
+                  ],
+                  2
+                ),
+              ]
+            ),
+          ]),
           _vm._v(" "),
           _c(
             "div",
@@ -38867,7 +38933,9 @@ var render = function () {
               _c("h4", [
                 _vm._v("Total: "),
                 _c("span", { staticClass: "badge bg-primary" }, [
-                  _vm._v(_vm._s(_vm.villes.total)),
+                  _vm._v(
+                    _vm._s(_vm.tot ? _vm.villes.total : _vm.villes.data.length)
+                  ),
                 ]),
               ]),
             ],

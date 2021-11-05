@@ -6,8 +6,16 @@
                     <div class="card-header bienvenue-header">Liste des villes</div>
 
                     <div class="card-body">
-                        <addville class="mb-3" @Ville-added="refresh"></addville>
-                        <table class="table table-responsive-md table-striped">
+                        <div class="d-flex justify-content-between">
+                            <addville class="mb-3" @Ville-added="refresh"></addville>
+                        <div class="form-row">
+                            <div class="col-row">
+                                <input type="text" class="form-control" @keyup="searchVille" v-model="q" placeholder="Rechercher une ville...">
+                            </div>
+                        </div>
+                        </div>
+                        
+                        <table class="table table-primary .table-hover table-responsive-md  ">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -17,7 +25,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(ville, index) in villes.data" :key="ville.id">
-                                    <th scope="row">{{ index + 1 + ((villes.current_page - 1) * 4) }}</th>
+                                    <th scope="row">{{ tot?(index + 1 + ((villes.current_page - 1) * 4)) : (index + 1) }}</th>
                                     <td>{{ ville.nom_ville }}</td>
                                     <td class="d-flex justify-content-sm-end">
                                         <button type="button" class="btn btn-warning mr-2" data-bs-toggle="modal" data-bs-target="#EditModal" @click="getVille(ville.id)">
@@ -33,7 +41,7 @@
                     </div>
                     <div class="card-footer d-flex justify-content-sm-between">
                         <pagination :data="villes" @pagination-change-page="getResults"></pagination>
-                        <h4>Total: <span class="badge bg-primary">{{ villes.total }}</span></h4>
+                        <h4>Total: <span class="badge bg-primary">{{ tot? villes.total : villes.data.length }}</span></h4>
                     </div>
                 </div>
             </div>
@@ -50,7 +58,9 @@ import EditVilleComponent from './EditVilleComponent.vue';
         data() {
             return {
                 villes: {},
-                villetoedit: ''
+                villetoedit: '',
+                q: '',
+                tot: true,
             }
         },
 
@@ -70,6 +80,19 @@ import EditVilleComponent from './EditVilleComponent.vue';
                 axios.get('/ville/edit/' + id)
                     .then(response => this.villetoedit = response.data)
                     .catch(error => console.log(error));
+            },
+            searchVille(){
+                if (this.q.length > 0) {
+                    axios.get('/ville/' + this.q)
+                        .then(response => this.villes = response.data)
+                        .catch(error => console.log(error));
+                    this.tot = false;
+                } else {
+                    axios.get('/ville')
+                        .then(response => this.villes = response.data)
+                        .catch(error => console.log(error));
+                    this.tot = true;
+                }
             },
             refresh(villes){
                 this.villes = villes.data;
