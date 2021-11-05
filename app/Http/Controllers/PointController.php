@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Point_livraison;
+use SebastianBergmann\Environment\Console;
 
 class PointController extends Controller
 {
@@ -13,7 +15,12 @@ class PointController extends Controller
      */
     public function index()
     {
-        //
+        if (request('q') != null) {
+            $points['data'] = Point_livraison::where('nom_point', 'like', '%' . request('q') . '%')->get();
+            return response()->json($points);
+        } else {
+            return $this->refresh();
+        }
     }
 
     /**
@@ -34,7 +41,13 @@ class PointController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $point = Point_livraison::create($request->all());
+
+        if($point) {
+            return $this->refresh();
+        }else {
+            return response()->json();
+        }
     }
 
     /**
@@ -56,7 +69,8 @@ class PointController extends Controller
      */
     public function edit($id)
     {
-        //
+        $point = Point_livraison::find($id);
+        return response()->json($point);
     }
 
     /**
@@ -66,9 +80,17 @@ class PointController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id)
     {
-        //
+        $point = Point_livraison::find($id);
+        $point->nom_point = request('nom_point');
+        $point->description = request('description');
+        $point->prix = request('prix');
+        $point->ville = request('ville');
+        $point->save();
+        if($point) {
+            return $this->refresh();
+        };
     }
 
     /**
@@ -79,6 +101,17 @@ class PointController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $point = Point_livraison::find($id);
+        
+        if($point->delete()){
+            return $this->refresh();
+        }
+    }
+
+    private function refresh()
+    {
+        # code...
+        $points = Point_livraison::orderBy('nom_point')->paginate(4);
+        return response()->json($points);
     }
 }

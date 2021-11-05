@@ -10,6 +10,9 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 Vue.component('addville', require('./components/AddVilleComponent.vue').default);
 Vue.component('editville', require('./components/EditVilleComponent.vue').default);
 
+Vue.component('addpoint', require('./components/AddPointComponent.vue').default);
+Vue.component('editpoint', require('./components/EditPointComponent.vue').default);
+
 import Home from './components/DashboardComponent.vue';
 import Point from './components/PointComponent.vue';
 import Ville from './components/VilleComponent.vue';
