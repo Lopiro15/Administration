@@ -19,10 +19,12 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/sidebar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/sweetalert2.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     
     <script src="{{ asset('js/popper.js') }}" ></script>
     <script src="{{ asset('js/bootstrap.js') }}" ></script>
+    <script src="{{ asset('js/sweetalert2.js') }}" ></script>
 </head>
 <body>
     <div id="apphome">

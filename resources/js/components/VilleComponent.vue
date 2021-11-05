@@ -12,16 +12,18 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Nom</th>
-                                    <th scope="col">Actions</th>
+                                    <th scope="col" class="d-flex justify-content-sm-end">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(ville, index) in villes.data" :key="ville.id">
                                     <th scope="row">{{ index + 1 + ((villes.current_page - 1) * 4) }}</th>
                                     <td>{{ ville.nom_ville }}</td>
-                                    <td><button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#EditModal" @click="getVille(ville.id)">
+                                    <td class="d-flex justify-content-sm-end">
+                                        <button type="button" class="btn btn-warning mr-2" data-bs-toggle="modal" data-bs-target="#EditModal" @click="getVille(ville.id)">
                                         Editer
                                          </button>
+                                         <button type="button" class="btn btn-danger" @click="deleteVille(ville.id)">Supprimer</button>
                                     </td>
                                 </tr>
                                 <editville v-bind:villeToEdit = "villetoedit" @ville-updated="refresh"></editville>
@@ -71,6 +73,29 @@ import EditVilleComponent from './EditVilleComponent.vue';
             },
             refresh(villes){
                 this.villes = villes.data;
+            },
+            deleteVille(id) {
+                Swal.fire({
+                    title: 'Etes vous sûre?',
+                    text: "Cette action est irréversible",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirmer',
+                    cancelButtonText: 'Annuler'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete('/ville/' + id)
+                            .then(response => this.villes = response.data)
+                            .catch(error => console.log(error));
+                        Swal.fire(
+                        'Effectué!',
+                        'La ville a été supprimée.',
+                        'success'
+                        );
+                    }
+                });
             }
         },
         mounted() {

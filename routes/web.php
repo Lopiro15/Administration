@@ -29,3 +29,4 @@ Route::get('/ville', 'VilleController@index');
 Route::post('/ville', 'VilleController@store');
 Route::get('/ville/edit/{id}', 'VilleController@edit');
 Route::patch('/ville/edit/{id}', 'VilleController@update');
+Route::delete('/ville/{id}', 'VilleController@destroy');

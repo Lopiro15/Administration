@@ -92,7 +92,11 @@ class VilleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $ville = Ville::find($id);
+        
+        if($ville->delete()){
+            return $this->refresh();
+        }
     }
 
     private function refresh()

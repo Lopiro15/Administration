@@ -2142,6 +2142,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2184,6 +2186,29 @@ __webpack_require__.r(__webpack_exports__);
     },
     refresh: function refresh(villes) {
       this.villes = villes.data;
+    },
+    deleteVille: function deleteVille(id) {
+      var _this4 = this;
+
+      Swal.fire({
+        title: 'Etes vous sûre?',
+        text: "Cette action est irréversible",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirmer',
+        cancelButtonText: 'Annuler'
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          axios["delete"]('/ville/' + id).then(function (response) {
+            return _this4.villes = response.data;
+          })["catch"](function (error) {
+            return console.log(error);
+          });
+          Swal.fire('Effectué!', 'La ville a été supprimée.', 'success');
+        }
+      });
     }
   },
   mounted: function mounted() {
@@ -38773,29 +38798,47 @@ var render = function () {
                           _vm._v(" "),
                           _c("td", [_vm._v(_vm._s(ville.nom_ville))]),
                           _vm._v(" "),
-                          _c("td", [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-warning",
-                                attrs: {
-                                  type: "button",
-                                  "data-bs-toggle": "modal",
-                                  "data-bs-target": "#EditModal",
-                                },
-                                on: {
-                                  click: function ($event) {
-                                    return _vm.getVille(ville.id)
+                          _c(
+                            "td",
+                            { staticClass: "d-flex justify-content-sm-end" },
+                            [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-warning mr-2",
+                                  attrs: {
+                                    type: "button",
+                                    "data-bs-toggle": "modal",
+                                    "data-bs-target": "#EditModal",
+                                  },
+                                  on: {
+                                    click: function ($event) {
+                                      return _vm.getVille(ville.id)
+                                    },
                                   },
                                 },
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                    Editer\n                                     "
-                                ),
-                              ]
-                            ),
-                          ]),
+                                [
+                                  _vm._v(
+                                    "\n                                    Editer\n                                     "
+                                  ),
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function ($event) {
+                                      return _vm.deleteVille(ville.id)
+                                    },
+                                  },
+                                },
+                                [_vm._v("Supprimer")]
+                              ),
+                            ]
+                          ),
                         ])
                       }),
                       _vm._v(" "),
@@ -38846,7 +38889,14 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nom")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Actions")]),
+        _c(
+          "th",
+          {
+            staticClass: "d-flex justify-content-sm-end",
+            attrs: { scope: "col" },
+          },
+          [_vm._v("Actions")]
+        ),
       ]),
     ])
   },
