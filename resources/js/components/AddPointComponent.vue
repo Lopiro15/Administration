@@ -2,7 +2,7 @@
     <div>
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalpoint">
-            Ajouter un point de livraison
+            Ajouter
         </button>
 
         <!-- Modal -->
@@ -29,11 +29,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="ville">Ville</label>
-                                <select class="form-select" aria-label="Default select example" v-model="ville">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                <select class="form-select" required aria-label="Default select example" v-model="ville">
+                                    <option v-for="ville in Villes" :key="ville.id" v-bind:value="ville.id">{{ ville.nom_ville }}</option>
                                 </select>
                             </div>
                             <div class="d-flex justify-content-sm-end mt-3">
@@ -51,12 +48,13 @@
 
 <script>
     export default {
+        props: ['Villes'],
         data() {
             return {
                 nom_point: '',
                 description: '',
+                ville: {},
                 prix: '',
-                ville: ''
             }
         },
         methods: {

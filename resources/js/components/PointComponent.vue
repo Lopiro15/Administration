@@ -7,12 +7,15 @@
 
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
-                            <addpoint class="mb-3" @Point-added="refresh"></addpoint>
-                        <div class="form-row">
+                            <addpoint class="mb-3" v-bind:Villes="villes" @Point-added="refresh"></addpoint>
                             <div class="col-row">
-                                <input type="text" class="form-control" @keyup="searchPoint" v-model="q" placeholder="Rechercher un point de livraison...">
+                                <input type="text" class="form-control" @keyup="searchPoint" v-model="q" placeholder="Rechercher...">
                             </div>
-                        </div>
+                            <div class="col-row">
+                                <select class="form-select" required aria-label="Default select example" v-model="v" @change="searchPoint">
+                                    <option v-for="ville in villes" :key="ville.id" v-bind:value="ville.id">{{ ville.nom_ville }}</option>
+                                </select>
+                            </div>
                         </div>
                         
                         <table class="table table-primary .table-hover table-responsive-md  ">
@@ -33,15 +36,14 @@
                                     <td>{{ point.prix }}</td>
                                     <td class="d-flex justify-content-sm-end">
                                         <button type="button" class="btn btn-warning mr-2" data-bs-toggle="modal" data-bs-target="#EditModalpoint" @click="getPoint(point.id)">
-                                        Editer
-                                         </button>
+                                            Editer
+                                        </button>
                                          <button type="button" class="btn btn-danger" @click="deletePoint(point.id)">Supprimer</button>
                                     </td>
                                 </tr>
-                                <editpoint v-bind:pointToEdit = "pointtoedit" @point-updated="refresh"></editpoint>
                             </tbody>
-                            
                         </table>
+                        <editpoint v-bind:pointToEdit = "pointtoedit" v-bind:Villes="villes" @point-updated="refresh"></editpoint>
                     </div>
                     <div class="card-footer d-flex justify-content-sm-between">
                         <pagination :data="points" @pagination-change-page="getResults"></pagination>
@@ -63,13 +65,18 @@ import EditPointComponent from './EditPointComponent.vue';
             return {
                 points: {},
                 pointtoedit: '',
+                villes: {},
                 q: '',
+                v: 1,
                 tot: true,
             }
         },
 
         created(){
-            axios.get('/point')
+            axios.get('/points')
+                .then(response => this.villes = response.data)
+                .catch(error => console.log(error));
+            axios.get('/point/' + this.v)
                 .then(response => this.points = response.data)
                 .catch(error => console.log(error));
         },
@@ -87,12 +94,12 @@ import EditPointComponent from './EditPointComponent.vue';
             },
             searchPoint(){
                 if (this.q.length > 0) {
-                    axios.get('/point/' + this.q)
+                    axios.get('/point/' + this.v + '/' + this.q)
                         .then(response => this.points = response.data)
                         .catch(error => console.log(error));
                     this.tot = false;
                 } else {
-                    axios.get('/point')
+                    axios.get('/point/' + this.v)
                         .then(response => this.points = response.data)
                         .catch(error => console.log(error));
                     this.tot = true;
@@ -118,7 +125,7 @@ import EditPointComponent from './EditPointComponent.vue';
                             .catch(error => console.log(error));
                         Swal.fire(
                         'Effectué!',
-                        'La ville a été supprimée.',
+                        'Le point de livarison a été supprimée.',
                         'success'
                         );
                     }

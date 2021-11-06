@@ -31,7 +31,8 @@ Route::get('/ville/edit/{id}', 'VilleController@edit');
 Route::patch('/ville/edit/{id}', 'VilleController@update');
 Route::delete('/ville/{id}', 'VilleController@destroy');
 
-Route::get('/point/{q?}', 'PointController@index');
+Route::get('/point/{v}/{q?}', 'PointController@index');
+Route::get('/points', 'PointController@chargeville');
 Route::post('/point', 'PointController@store');
 Route::get('/point/edit/{id}', 'PointController@edit');
 Route::patch('/point/edit/{id}', 'PointController@update');

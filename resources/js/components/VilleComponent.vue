@@ -25,7 +25,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(ville, index) in villes.data" :key="ville.id">
-                                    <th scope="row">{{ tot?(index + 1 + ((villes.current_page - 1) * 4)) : (index + 1) }}</th>
+                                    <th scope="row">{{ index + 1 + ((villes.current_page - 1) * 4) }}</th>
                                     <td>{{ ville.nom_ville }}</td>
                                     <td class="d-flex justify-content-sm-end">
                                         <button type="button" class="btn btn-warning mr-2" data-bs-toggle="modal" data-bs-target="#EditModal" @click="getVille(ville.id)">
@@ -34,14 +34,13 @@
                                          <button type="button" class="btn btn-danger" @click="deleteVille(ville.id)">Supprimer</button>
                                     </td>
                                 </tr>
-                                <editville v-bind:villeToEdit = "villetoedit" @ville-updated="refresh"></editville>
                             </tbody>
-                            
                         </table>
+                        <editville v-bind:villeToEdit = "villetoedit" @ville-updated="refresh"></editville>
                     </div>
                     <div class="card-footer d-flex justify-content-sm-between">
                         <pagination :data="villes" @pagination-change-page="getResults"></pagination>
-                        <h4>Total: <span class="badge bg-primary">{{ tot? villes.total : villes.data.length }}</span></h4>
+                        <h4>Total: <span class="badge bg-primary">{{ villes.total }}</span></h4>
                     </div>
                 </div>
             </div>
@@ -60,7 +59,6 @@ import EditVilleComponent from './EditVilleComponent.vue';
                 villes: {},
                 villetoedit: '',
                 q: '',
-                tot: true,
             }
         },
 
@@ -86,12 +84,10 @@ import EditVilleComponent from './EditVilleComponent.vue';
                     axios.get('/ville/' + this.q)
                         .then(response => this.villes = response.data)
                         .catch(error => console.log(error));
-                    this.tot = false;
                 } else {
                     axios.get('/ville')
                         .then(response => this.villes = response.data)
                         .catch(error => console.log(error));
-                    this.tot = true;
                 }
             },
             refresh(villes){

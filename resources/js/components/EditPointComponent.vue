@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="modal fade" id="EditModalpoint" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <div class="modal fade" data-bs-backdrop="static" id="EditModalpoint" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
+            <div class="modal-dialog ">
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="EditModalLabel">Modifier le point de livraison</h5>
@@ -24,10 +24,7 @@
                             <div class="form-group">
                                 <label for="ville">Ville</label>
                                 <select class="form-select" aria-label="Default select example" v-model="pointToEdit.ville">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option v-for="ville in Villes" :key="ville.id" v-bind:value="ville.id">{{ ville.nom_ville }}</option>
                                 </select>
                             </div>
                         <div class="d-flex justify-content-sm-end mt-3">
@@ -44,7 +41,7 @@
 
 <script>
     export default {
-        props: ['pointToEdit'],
+        props: ['pointToEdit', 'Villes'],
         methods: {
             update() {
                 axios.patch('/point/edit/' + this.pointToEdit.id, {

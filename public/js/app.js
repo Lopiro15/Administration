@@ -1956,16 +1956,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['Villes'],
   data: function data() {
     return {
       nom_point: '',
       description: '',
-      prix: '',
-      ville: ''
+      ville: {},
+      prix: ''
     };
   },
   methods: {
@@ -2148,11 +2146,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['pointToEdit'],
+  props: ['pointToEdit', 'Villes'],
   methods: {
     update: function update() {
       var _this = this;
@@ -2294,6 +2289,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2305,14 +2302,21 @@ __webpack_require__.r(__webpack_exports__);
     return {
       points: {},
       pointtoedit: '',
+      villes: {},
       q: '',
+      v: 1,
       tot: true
     };
   },
   created: function created() {
     var _this = this;
 
-    axios.get('/point').then(function (response) {
+    axios.get('/points').then(function (response) {
+      return _this.villes = response.data;
+    })["catch"](function (error) {
+      return console.log(error);
+    });
+    axios.get('/point/' + this.v).then(function (response) {
       return _this.points = response.data;
     })["catch"](function (error) {
       return console.log(error);
@@ -2340,14 +2344,14 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       if (this.q.length > 0) {
-        axios.get('/point/' + this.q).then(function (response) {
+        axios.get('/point/' + this.v + '/' + this.q).then(function (response) {
           return _this4.points = response.data;
         })["catch"](function (error) {
           return console.log(error);
         });
         this.tot = false;
       } else {
-        axios.get('/point').then(function (response) {
+        axios.get('/point/' + this.v).then(function (response) {
           return _this4.points = response.data;
         })["catch"](function (error) {
           return console.log(error);
@@ -2377,7 +2381,7 @@ __webpack_require__.r(__webpack_exports__);
           })["catch"](function (error) {
             return console.log(error);
           });
-          Swal.fire('Effectué!', 'La ville a été supprimée.', 'success');
+          Swal.fire('Effectué!', 'Le point de livarison a été supprimée.', 'success');
         }
       });
     }
@@ -2450,7 +2454,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2462,8 +2465,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       villes: {},
       villetoedit: '',
-      q: '',
-      tot: true
+      q: ''
     };
   },
   created: function created() {
@@ -2502,14 +2504,12 @@ __webpack_require__.r(__webpack_exports__);
         })["catch"](function (error) {
           return console.log(error);
         });
-        this.tot = false;
       } else {
         axios.get('/ville').then(function (response) {
           return _this4.villes = response.data;
         })["catch"](function (error) {
           return console.log(error);
         });
-        this.tot = true;
       }
     },
     refresh: function refresh(villes) {
@@ -38736,7 +38736,7 @@ var render = function () {
           "data-bs-target": "#exampleModalpoint",
         },
       },
-      [_vm._v("\n        Ajouter un point de livraison\n    ")]
+      [_vm._v("\n        Ajouter\n    ")]
     ),
     _vm._v(" "),
     _c(
@@ -38872,7 +38872,10 @@ var render = function () {
                         },
                       ],
                       staticClass: "form-select",
-                      attrs: { "aria-label": "Default select example" },
+                      attrs: {
+                        required: "",
+                        "aria-label": "Default select example",
+                      },
                       on: {
                         change: function ($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -38889,19 +38892,14 @@ var render = function () {
                         },
                       },
                     },
-                    [
-                      _c("option", { attrs: { selected: "" } }, [
-                        _vm._v("Open this select menu"),
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "1" } }, [_vm._v("One")]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "2" } }, [_vm._v("Two")]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "3" } }, [
-                        _vm._v("Three"),
-                      ]),
-                    ]
+                    _vm._l(_vm.Villes, function (ville) {
+                      return _c(
+                        "option",
+                        { key: ville.id, domProps: { value: ville.id } },
+                        [_vm._v(_vm._s(ville.nom_ville))]
+                      )
+                    }),
+                    0
                   ),
                 ]),
                 _vm._v(" "),
@@ -38993,7 +38991,7 @@ var render = function () {
           "data-bs-target": "#exampleModal",
         },
       },
-      [_vm._v("\n        Ajouter une ville\n    ")]
+      [_vm._v("\n        Ajouter\n    ")]
     ),
     _vm._v(" "),
     _c(
@@ -39176,6 +39174,7 @@ var render = function () {
       {
         staticClass: "modal fade",
         attrs: {
+          "data-bs-backdrop": "static",
           id: "EditModalpoint",
           tabindex: "-1",
           "aria-labelledby": "EditModalLabel",
@@ -39183,7 +39182,7 @@ var render = function () {
         },
       },
       [
-        _c("div", { staticClass: "modal-dialog modal-dialog-centered" }, [
+        _c("div", { staticClass: "modal-dialog " }, [
           _c("div", { staticClass: "modal-content" }, [
             _vm._m(0),
             _vm._v(" "),
@@ -39332,19 +39331,14 @@ var render = function () {
                         },
                       },
                     },
-                    [
-                      _c("option", { attrs: { selected: "" } }, [
-                        _vm._v("Open this select menu"),
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "1" } }, [_vm._v("One")]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "2" } }, [_vm._v("Two")]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "3" } }, [
-                        _vm._v("Three"),
-                      ]),
-                    ]
+                    _vm._l(_vm.Villes, function (ville) {
+                      return _c(
+                        "option",
+                        { key: ville.id, domProps: { value: ville.id } },
+                        [_vm._v(_vm._s(ville.nom_ville))]
+                      )
+                    }),
+                    0
                   ),
                 ]),
                 _vm._v(" "),
@@ -39561,17 +39555,20 @@ var render = function () {
             _vm._v("Liste des points de livraison"),
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c(
-              "div",
-              { staticClass: "d-flex justify-content-between" },
-              [
-                _c("addpoint", {
-                  staticClass: "mb-3",
-                  on: { "Point-added": _vm.refresh },
-                }),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-row" }, [
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _c(
+                "div",
+                { staticClass: "d-flex justify-content-between" },
+                [
+                  _c("addpoint", {
+                    staticClass: "mb-3",
+                    attrs: { Villes: _vm.villes },
+                    on: { "Point-added": _vm.refresh },
+                  }),
+                  _vm._v(" "),
                   _c("div", { staticClass: "col-row" }, [
                     _c("input", {
                       directives: [
@@ -39583,10 +39580,7 @@ var render = function () {
                         },
                       ],
                       staticClass: "form-control",
-                      attrs: {
-                        type: "text",
-                        placeholder: "Rechercher un point de livraison...",
-                      },
+                      attrs: { type: "text", placeholder: "Rechercher..." },
                       domProps: { value: _vm.q },
                       on: {
                         keyup: _vm.searchPoint,
@@ -39599,23 +39593,68 @@ var render = function () {
                       },
                     }),
                   ]),
-                ]),
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "table",
-              {
-                staticClass:
-                  "table table-primary .table-hover table-responsive-md  ",
-              },
-              [
-                _vm._m(0),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  [
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-row" }, [
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.v,
+                            expression: "v",
+                          },
+                        ],
+                        staticClass: "form-select",
+                        attrs: {
+                          required: "",
+                          "aria-label": "Default select example",
+                        },
+                        on: {
+                          change: [
+                            function ($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function (o) {
+                                  return o.selected
+                                })
+                                .map(function (o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.v = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            },
+                            _vm.searchPoint,
+                          ],
+                        },
+                      },
+                      _vm._l(_vm.villes, function (ville) {
+                        return _c(
+                          "option",
+                          { key: ville.id, domProps: { value: ville.id } },
+                          [_vm._v(_vm._s(ville.nom_ville))]
+                        )
+                      }),
+                      0
+                    ),
+                  ]),
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "table",
+                {
+                  staticClass:
+                    "table table-primary .table-hover table-responsive-md  ",
+                },
+                [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
                     _vm._l(_vm.points.data, function (point, index) {
                       return _c("tr", { key: point.id }, [
                         _c("th", { attrs: { scope: "row" } }, [
@@ -39655,7 +39694,7 @@ var render = function () {
                               },
                               [
                                 _vm._v(
-                                  "\n                                    Editer\n                                     "
+                                  "\n                                        Editer\n                                    "
                                 ),
                               ]
                             ),
@@ -39677,17 +39716,18 @@ var render = function () {
                         ),
                       ])
                     }),
-                    _vm._v(" "),
-                    _c("editpoint", {
-                      attrs: { pointToEdit: _vm.pointtoedit },
-                      on: { "point-updated": _vm.refresh },
-                    }),
-                  ],
-                  2
-                ),
-              ]
-            ),
-          ]),
+                    0
+                  ),
+                ]
+              ),
+              _vm._v(" "),
+              _c("editpoint", {
+                attrs: { pointToEdit: _vm.pointtoedit, Villes: _vm.villes },
+                on: { "point-updated": _vm.refresh },
+              }),
+            ],
+            1
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -39770,69 +39810,69 @@ var render = function () {
             _vm._v("Liste des villes"),
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c(
-              "div",
-              { staticClass: "d-flex justify-content-between" },
-              [
-                _c("addville", {
-                  staticClass: "mb-3",
-                  on: { "Ville-added": _vm.refresh },
-                }),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-row" }, [
-                  _c("div", { staticClass: "col-row" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.q,
-                          expression: "q",
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _c(
+                "div",
+                { staticClass: "d-flex justify-content-between" },
+                [
+                  _c("addville", {
+                    staticClass: "mb-3",
+                    on: { "Ville-added": _vm.refresh },
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-row" }, [
+                    _c("div", { staticClass: "col-row" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.q,
+                            expression: "q",
+                          },
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          type: "text",
+                          placeholder: "Rechercher une ville...",
                         },
-                      ],
-                      staticClass: "form-control",
-                      attrs: {
-                        type: "text",
-                        placeholder: "Rechercher une ville...",
-                      },
-                      domProps: { value: _vm.q },
-                      on: {
-                        keyup: _vm.searchVille,
-                        input: function ($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.q = $event.target.value
+                        domProps: { value: _vm.q },
+                        on: {
+                          keyup: _vm.searchVille,
+                          input: function ($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.q = $event.target.value
+                          },
                         },
-                      },
-                    }),
+                      }),
+                    ]),
                   ]),
-                ]),
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "table",
-              {
-                staticClass:
-                  "table table-primary .table-hover table-responsive-md  ",
-              },
-              [
-                _vm._m(0),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  [
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "table",
+                {
+                  staticClass:
+                    "table table-primary .table-hover table-responsive-md  ",
+                },
+                [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
                     _vm._l(_vm.villes.data, function (ville, index) {
                       return _c("tr", { key: ville.id }, [
                         _c("th", { attrs: { scope: "row" } }, [
                           _vm._v(
                             _vm._s(
-                              _vm.tot
-                                ? index + 1 + (_vm.villes.current_page - 1) * 4
-                                : index + 1
+                              index + 1 + (_vm.villes.current_page - 1) * 4
                             )
                           ),
                         ]),
@@ -39882,17 +39922,18 @@ var render = function () {
                         ),
                       ])
                     }),
-                    _vm._v(" "),
-                    _c("editville", {
-                      attrs: { villeToEdit: _vm.villetoedit },
-                      on: { "ville-updated": _vm.refresh },
-                    }),
-                  ],
-                  2
-                ),
-              ]
-            ),
-          ]),
+                    0
+                  ),
+                ]
+              ),
+              _vm._v(" "),
+              _c("editville", {
+                attrs: { villeToEdit: _vm.villetoedit },
+                on: { "ville-updated": _vm.refresh },
+              }),
+            ],
+            1
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -39906,9 +39947,7 @@ var render = function () {
               _c("h4", [
                 _vm._v("Total: "),
                 _c("span", { staticClass: "badge bg-primary" }, [
-                  _vm._v(
-                    _vm._s(_vm.tot ? _vm.villes.total : _vm.villes.data.length)
-                  ),
+                  _vm._v(_vm._s(_vm.villes.total)),
                 ]),
               ]),
             ],
