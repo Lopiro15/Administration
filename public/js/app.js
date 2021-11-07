@@ -2291,6 +2291,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2304,8 +2305,8 @@ __webpack_require__.r(__webpack_exports__);
       pointtoedit: '',
       villes: {},
       q: '',
-      v: 1,
-      tot: true
+      v: 0,
+      se: 0
     };
   },
   created: function created() {
@@ -2327,9 +2328,20 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      axios.get('/point?page=' + page).then(function (response) {
-        _this2.points = response.data;
-      });
+
+      if (this.q.length > 0) {
+        axios.get('/point/' + this.v + '/' + this.q + '?page=' + page).then(function (response) {
+          return _this2.points = response.data;
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+      } else {
+        axios.get('/point/' + this.v + '?page=' + page).then(function (response) {
+          return _this2.points = response.data;
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+      }
     },
     getPoint: function getPoint(id) {
       var _this3 = this;
@@ -2349,14 +2361,12 @@ __webpack_require__.r(__webpack_exports__);
         })["catch"](function (error) {
           return console.log(error);
         });
-        this.tot = false;
       } else {
         axios.get('/point/' + this.v).then(function (response) {
           return _this4.points = response.data;
         })["catch"](function (error) {
           return console.log(error);
         });
-        this.tot = true;
       }
     },
     refresh: function refresh(points) {
@@ -2482,9 +2492,20 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      axios.get('/ville?page=' + page).then(function (response) {
-        _this2.villes = response.data;
-      });
+
+      if (this.q.length > 0) {
+        axios.get('/ville/' + this.q + '?page=' + page).then(function (response) {
+          return _this2.villes = response.data;
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+      } else {
+        axios.get('/ville?page=' + page).then(function (response) {
+          return _this2.villes = response.data;
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+      }
     },
     getVille: function getVille(id) {
       var _this3 = this;
@@ -39608,6 +39629,7 @@ var render = function () {
                         ],
                         staticClass: "form-select",
                         attrs: {
+                          selectedIndex: _vm.se,
                           required: "",
                           "aria-label": "Default select example",
                         },
@@ -39630,14 +39652,20 @@ var render = function () {
                           ],
                         },
                       },
-                      _vm._l(_vm.villes, function (ville) {
-                        return _c(
-                          "option",
-                          { key: ville.id, domProps: { value: ville.id } },
-                          [_vm._v(_vm._s(ville.nom_ville))]
-                        )
-                      }),
-                      0
+                      [
+                        _c("option", { attrs: { value: "0" } }, [
+                          _vm._v("Toutes les villes"),
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(_vm.villes, function (ville) {
+                          return _c(
+                            "option",
+                            { key: ville.id, domProps: { value: ville.id } },
+                            [_vm._v(_vm._s(ville.nom_ville))]
+                          )
+                        }),
+                      ],
+                      2
                     ),
                   ]),
                 ],
@@ -39660,9 +39688,7 @@ var render = function () {
                         _c("th", { attrs: { scope: "row" } }, [
                           _vm._v(
                             _vm._s(
-                              _vm.tot
-                                ? index + 1 + (_vm.points.current_page - 1) * 4
-                                : index + 1
+                              index + 1 + (_vm.points.current_page - 1) * 3
                             )
                           ),
                         ]),
@@ -39741,9 +39767,7 @@ var render = function () {
               _c("h4", [
                 _vm._v("Total: "),
                 _c("span", { staticClass: "badge bg-primary" }, [
-                  _vm._v(
-                    _vm._s(_vm.tot ? _vm.points.total : _vm.points.data.length)
-                  ),
+                  _vm._v(_vm._s(_vm.points.total)),
                 ]),
               ]),
             ],

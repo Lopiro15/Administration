@@ -69,10 +69,15 @@ import EditVilleComponent from './EditVilleComponent.vue';
         },
         methods: {
            getResults(page = 1) {
-            axios.get('/ville?page=' + page)
-                .then(response => {
-                    this.villes = response.data;
-                });
+                if (this.q.length > 0) {
+                    axios.get('/ville/' + this.q + '?page=' + page)
+                        .then(response => this.villes = response.data)
+                        .catch(error => console.log(error));
+                } else {
+                    axios.get('/ville?page=' + page)
+                        .then(response => this.villes = response.data)
+                        .catch(error => console.log(error));
+                }
             },
             getVille(id) {
                 axios.get('/ville/edit/' + id)

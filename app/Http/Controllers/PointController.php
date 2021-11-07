@@ -17,8 +17,14 @@ class PointController extends Controller
     public function index()
     {
         if (request('q') != null) {
-            $points['data'] = Point_livraison::where('ville', request('v'))->where('nom_point', 'like', '%' . request('q') . '%')->orderBy('nom_point')->get();
-            return response()->json($points);
+            if (request('v') != 0) {
+                # code...
+                $points = Point_livraison::where('ville', request('v'))->where('nom_point', 'like', '%' . request('q') . '%')->orderBy('nom_point')->paginate(3);
+                return response()->json($points);
+            } else {
+                $points = Point_livraison::where('nom_point', 'like', '%' . request('q') . '%')->orderBy('nom_point')->paginate(3);
+                return response()->json($points);
+            }
         } else {
             return $this->refresh();
         }
@@ -112,13 +118,19 @@ class PointController extends Controller
     private function refresh()
     {
         # code...
-        $points = Point_livraison::where('ville', request('v'))->orderBy('nom_point')->paginate(4);
-        return response()->json($points);
+        if (request('v') != 0) {
+            # code...
+            $points = Point_livraison::where('ville', request('v'))->orderBy('nom_point')->paginate(3);
+            return response()->json($points);
+        } else {
+            $points = Point_livraison::orderBy('nom_point')->paginate(3);
+            return response()->json($points);
+        }
     }
 
     public function chargeville() 
     {
-        $villes = Ville::all();
+        $villes = Ville::orderBy('nom_ville')->get();
         return response() ->json($villes);
     }
 }

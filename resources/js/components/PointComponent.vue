@@ -12,7 +12,8 @@
                                 <input type="text" class="form-control" @keyup="searchPoint" v-model="q" placeholder="Rechercher...">
                             </div>
                             <div class="col-row">
-                                <select class="form-select" required aria-label="Default select example" v-model="v" @change="searchPoint">
+                                <select class="form-select" :selectedIndex="se" required aria-label="Default select example" v-model="v" @change="searchPoint">
+                                    <option value="0">Toutes les villes</option>
                                     <option v-for="ville in villes" :key="ville.id" v-bind:value="ville.id">{{ ville.nom_ville }}</option>
                                 </select>
                             </div>
@@ -30,7 +31,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(point, index) in points.data" :key="point.id">
-                                    <th scope="row">{{ tot?(index + 1 + ((points.current_page - 1) * 4)) : (index + 1) }}</th>
+                                    <th scope="row">{{ index + 1 + ((points.current_page - 1) * 3) }}</th>
                                     <td>{{ point.nom_point }}</td>
                                     <td>{{ point.description }}</td>
                                     <td>{{ point.prix }}</td>
@@ -47,7 +48,7 @@
                     </div>
                     <div class="card-footer d-flex justify-content-sm-between">
                         <pagination :data="points" @pagination-change-page="getResults"></pagination>
-                        <h4>Total: <span class="badge bg-primary">{{ tot? points.total : points.data.length }}</span></h4>
+                        <h4>Total: <span class="badge bg-primary">{{ points.total }}</span></h4>
                     </div>
                 </div>
             </div>
@@ -67,8 +68,8 @@ import EditPointComponent from './EditPointComponent.vue';
                 pointtoedit: '',
                 villes: {},
                 q: '',
-                v: 1,
-                tot: true,
+                v: 0,
+                se: 0,
             }
         },
 
@@ -82,10 +83,15 @@ import EditPointComponent from './EditPointComponent.vue';
         },
         methods: {
            getResults(page = 1) {
-            axios.get('/point?page=' + page)
-                .then(response => {
-                    this.points = response.data;
-                });
+                if (this.q.length > 0) {
+                    axios.get('/point/' + this.v + '/' + this.q + '?page=' + page)
+                        .then(response => this.points = response.data)
+                        .catch(error => console.log(error));
+                } else {
+                    axios.get('/point/' + this.v + '?page=' + page)
+                        .then(response => this.points = response.data)
+                        .catch(error => console.log(error));
+                }
             },
             getPoint(id) {
                 axios.get('/point/edit/' + id)
@@ -97,12 +103,10 @@ import EditPointComponent from './EditPointComponent.vue';
                     axios.get('/point/' + this.v + '/' + this.q)
                         .then(response => this.points = response.data)
                         .catch(error => console.log(error));
-                    this.tot = false;
                 } else {
                     axios.get('/point/' + this.v)
                         .then(response => this.points = response.data)
                         .catch(error => console.log(error));
-                    this.tot = true;
                 }
             },
             refresh(points){
