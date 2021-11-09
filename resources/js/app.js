@@ -13,6 +13,8 @@ Vue.component('editville', require('./components/EditVilleComponent.vue').defaul
 Vue.component('addpoint', require('./components/AddPointComponent.vue').default);
 Vue.component('editpoint', require('./components/EditPointComponent.vue').default);
 
+Vue.component('graphe', require('./components/GrapheComponent.vue').default);
+
 import Home from './components/DashboardComponent.vue';
 import Point from './components/PointComponent.vue';
 import Ville from './components/VilleComponent.vue';

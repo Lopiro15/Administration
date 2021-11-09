@@ -37,3 +37,8 @@ Route::post('/point', 'PointController@store');
 Route::get('/point/edit/{id}', 'PointController@edit');
 Route::patch('/point/edit/{id}', 'PointController@update');
 Route::delete('/point/{id}', 'PointController@destroy');
+
+Route::get('/Home', 'PointController@total');
+
+
+

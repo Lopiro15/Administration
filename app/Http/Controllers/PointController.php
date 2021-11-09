@@ -133,4 +133,39 @@ class PointController extends Controller
         $villes = Ville::orderBy('nom_ville')->get();
         return response() ->json($villes);
     }
+
+    public function total()
+    {
+        $i = 0;
+        $villesdata = Ville::orderBy('nom_ville')->get();
+        $total[0] = Ville::count();
+        $total[1] = Point_livraison::count();
+        foreach ($villesdata as $ville) {
+            # code...
+            $villes[$i] = $ville['nom_ville'];
+            $id = $ville['id'];
+            $points[$i] = Point_livraison::Where('ville', $id)->count();
+            $i++;
+        }
+        $chartdata =  [
+            'labels' => $villes,
+            'datasets' => [
+                [
+                    'label' => 'Nombre de point de livraison',
+                    'backgroundColor' => 'rgba(52, 144, 220, 0.3)',
+                    'data' => $points
+                ],
+            ]
+        ];
+        $options = [
+            'responsive' => true,
+            'maintainAspectRatio' => false
+        ];
+        $donnees = [
+            'total' => $total,
+            'chartdata' => $chartdata,
+            'options' => $options
+        ];
+        return response() ->json($donnees);
+    }
 }

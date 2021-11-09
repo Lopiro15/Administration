@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
+                <div class="card shadow-lg">
                     <div class="card-header bienvenue-header">Liste des villes</div>
 
                     <div class="card-body">
